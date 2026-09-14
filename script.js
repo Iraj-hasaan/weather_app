@@ -1,4 +1,4 @@
-async function getWeather() {
+ async function getWeather() {
     const city = document.getElementById("cityInput").value;
     const result = document.getElementById("weatherResult");
 
