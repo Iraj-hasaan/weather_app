@@ -1,20 +1,51 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
+    <title>Weather App Using API</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <h1>Weather App</h1>
+    <div class="weather-container">
 
-    <input type="text" id="cityInput" placeholder="Enter city name">
-    <button onclick="getWeather()">Get Weather</button>
+        <h1>Weather App 🌤️</h1>
 
-    <div id="weatherResult"></div>
+        <p class="subtitle">
+            Check current weather conditions by city
+        </p>
+
+        <div class="search-box">
+            <input
+                type="text"
+                id="cityInput"
+                placeholder="Enter city name"
+            >
+
+            <button onclick="getWeather()">
+                Search
+            </button>
+        </div>
+
+        <div id="errorMessage"></div>
+
+        <div id="weatherResult" class="weather-result">
+
+            <h2 id="cityName"></h2>
+
+            <div id="weatherIcon"></div>
+
+            <h3 id="temperature"></h3>
+
+            <p id="condition"></p>
+
+            <p id="humidity"></p>
+
+        </div>
+
+    </div>
 
     <script src="script.js"></script>
 
