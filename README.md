@@ -1,5 +1,3 @@
-# weather_app
-A simple weather app that shows temperature, humidity, and weather conditions using a weather API
 # Weather App Using API 🌤️
 
 A responsive weather application built using HTML, CSS, and JavaScript.
