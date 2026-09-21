@@ -1,63 +1,77 @@
- async function getWeather() {
-    const city = document.getElementById("cityInput").value;
-    const result = document.getElementById("weatherResult");
+const API_KEY = "YOUR_API_KEY";
+
+async function getWeather() {
+
+    const city = document.getElementById("cityInput").value.trim();
+
+    const weatherResult = document.getElementById("weatherResult");
+    const errorMessage = document.getElementById("errorMessage");
 
     if (city === "") {
-        result.innerHTML = "Please enter a city name.";
+        errorMessage.textContent = "Please enter a city name.";
+        weatherResult.style.display = "none";
         return;
     }
 
+    const url =
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+
     try {
-        // Find the city
-        const locationResponse = await fetch(
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
-        );
 
-        const locationData = await locationResponse.json();
+        const response = await fetch(url);
 
-        if (!locationData.results) {
+        if (!response.ok) {
             throw new Error("City not found");
         }
 
-        const location = locationData.results[0];
+        const data = await response.json();
 
-        // Get weather
-        const weatherResponse = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=auto`
-        );
+        document.getElementById("cityName").textContent =
+            `${data.name}, ${data.sys.country}`;
 
-        const weatherData = await weatherResponse.json();
+        document.getElementById("temperature").textContent =
+            `${Math.round(data.main.temp)}°C`;
 
-        const temperature = weatherData.current.temperature_2m;
-        const humidity = weatherData.current.relative_humidity_2m;
-        const code = weatherData.current.weather_code;
+        document.getElementById("condition").textContent =
+            data.weather[0].description;
 
-        let condition;
-        let icon;
+        document.getElementById("humidity").textContent =
+            `Humidity: ${data.main.humidity}%`;
 
-        if (code === 0) {
-            condition = "Sunny";
+        const condition =
+            data.weather[0].main.toLowerCase();
+
+        let icon = "🌤️";
+
+        if (condition.includes("clear")) {
             icon = "☀️";
-        } else if (code >= 1 && code <= 3) {
-            condition = "Cloudy";
+        } 
+        else if (condition.includes("cloud")) {
             icon = "☁️";
-        } else if (code >= 51 && code <= 99) {
-            condition = "Rainy";
+        } 
+        else if (
+            condition.includes("rain") ||
+            condition.includes("drizzle")
+        ) {
             icon = "🌧️";
-        } else {
-            condition = "Weather condition";
-            icon = "🌤️";
+        } 
+        else if (condition.includes("thunderstorm")) {
+            icon = "⛈️";
+        } 
+        else if (condition.includes("snow")) {
+            icon = "❄️";
         }
 
-        result.innerHTML = `
-            <h2>${location.name}</h2>
-            <h1>${icon}</h1>
-            <p>Temperature: ${temperature}°C</p>
-            <p>Humidity: ${humidity}%</p>
-            <p>Condition: ${condition}</p>
-        `;
+        document.getElementById("weatherIcon").textContent = icon;
+
+        weatherResult.style.display = "block";
+        errorMessage.textContent = "";
 
     } catch (error) {
-        result.innerHTML = "City not found. Please try again.";
+
+        weatherResult.style.display = "none";
+
+        errorMessage.textContent =
+            "City not found. Please enter a valid city name.";
     }
 }
